@@ -1,6 +1,7 @@
 var cacheName = 'news-api-client';
 var filesToCache = [
     //'./',
+    './img/icon.png',
     './index.html',
     './js/app.js',
     './css/style.css',
