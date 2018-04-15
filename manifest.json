@@ -1,0 +1,30 @@
+{
+  "short_name": "News Api Client",
+  "name": "News Api Client",
+  "theme_color": "#673ab7",
+  "icons": [
+    {
+      "src": "img/icon.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "img/icon.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "img/icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "img/icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#2196F3"
+}

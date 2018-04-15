@@ -37,9 +37,21 @@ self.addEventListener('activate', function (e) {
 
 self.addEventListener('fetch', function (e) {
     console.log('[ServiceWorker] Fetch', e.request.url);
-    e.respondWith(
-        caches.match(e.request).then(function (response) {
-            return response || fetch(e.request);
-        })
-    );
+    var newsApiUrl = 'https://newsapi.org/v2';
+    if (e.request.url.indexOf(newsApiUrl) > -1) {
+        e.respondWith(
+            caches.open(dataCacheName).then(function (cache) {
+                return fetch(e.request).then(function (response) {
+                    cache.put(e.request.url, response.clone());
+                    return response;
+                });
+            })
+        );
+    } else {
+        e.respondWith(
+            caches.match(e.request).then(function (response) {
+                return response || fetch(e.request);
+            })
+        );
+    }
 });

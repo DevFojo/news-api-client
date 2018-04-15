@@ -3,7 +3,8 @@
 
     var app = {
         isLoading: true,
-        articles: {},
+        articleCards: {},
+        filter: {},
         spinner: document.querySelector('.loader'),
         articleItemTemplate: document.querySelector('.article_template'),
         articleList: document.querySelector('.article_list'),
@@ -29,8 +30,19 @@
     };
     app.getNews = function () {
         return new Promise(function (resolve, reject) {
+            var country = '';
+            var source = '';
+            var query = '';
+            if (app.filter) {
+                country = app.filter.country ? app.filter.country : country;
+                source = app.filter.source ? app.filter.source : source;
+                query = app.filter.query ? app.filter.query : query;
+            }
+            if (!country && !source && !query) {
+                country = 'ng';
+            }
             var xhr = new XMLHttpRequest(),
-                url = 'https://newsapi.org/v2/top-headlines?country=ng&apiKey=7a8dfe28afa24555aa4dbff00d1dfe3d',
+                url = `https://newsapi.org/v2/top-headlines?country=${country}${query ? '&q=' + query : ''}${source ? '&sources=' + source : ''}&apiKey=7a8dfe28afa24555aa4dbff00d1dfe3d`,
                 method = 'GET';
             xhr.open(method, url, true);
             xhr.onreadystatechange = function () {
@@ -53,28 +65,22 @@
 
     app.updateNewsCard = function (data) {
         data.map(function (c) {
-            var article = app.articles[c.url];
-            if (!article) {
-                article = {
-                    'source': c.source.name,
-                    'title': c.title,
-                    'description': c.description
-                };
-                app.articles[c.url] = article;
-                var articleItem = app.articleItemTemplate.cloneNode(true);
-                articleItem.classList.remove('article_template');
-                articleItem.querySelector('.article_title').textContent = c.title;
-                var description = articleItem.querySelector('.article_description');
+            var articleCard = app.articleCards[c.url];
+            if (!articleCard) {
+                articleCard = app.articleItemTemplate.cloneNode(true);
+                articleCard.classList.remove('article_template');
+                articleCard.querySelector('.article_title').textContent = c.title;
+                var description = articleCard.querySelector('.article_description');
                 if (c.description) {
                     description.textContent = c.description;
                 } else {
                     description.setAttribute('hidden', true);
                 }
-                articleItem.querySelector('.article_link').href = c.url;
-                articleItem.querySelector('.article_source').textContent += c.source.name;
-                articleItem.removeAttribute('hidden');
-                app.articleList.appendChild(articleItem);
-                console.log('article created', article);
+                articleCard.querySelector('.article_link').href = c.url;
+                articleCard.querySelector('.article_source').appendChild(document.createTextNode(' ' + c.source.name));
+                articleCard.querySelector('.article_time').appendChild(document.createTextNode(' ' + new Date(c.publishedAt)));
+                articleCard.removeAttribute('hidden');
+                app.articleList.appendChild(articleCard);
             }
         });
     };
@@ -83,9 +89,18 @@
         navigator.serviceWorker
             .register('./service-worker.js')
             .then(function () {
-                console.log('Service Worker Registered');
+                console.log('[ServiceWorker] Registered');
+            }).catch(function (err) {
+                console.log('[ServiceWorker] Registration failed');
             });
     }
+
+    if (!('indexedDB' in window)) {
+        console.log('[IndexedDB] This browser doesn\'t support IndexedDB');
+        return;
+    }
+
+
     var initialNews = [{
         "source": {
             "id": null,
