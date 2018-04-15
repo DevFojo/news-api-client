@@ -10,12 +10,12 @@
         addDialog: document.querySelector('.dialog-container'),
     };
 
-    document.getElementById('btnRefresh').addEventListener('click', function () {
-        app.spinner.removeAttribute('hidden');
-        app.container.setAttribute('hidden', true);
-        app.isLoading = true;
-        app.updateNews();
-    });
+    // document.getElementById('btnRefresh').addEventListener('click', function () {
+    //     app.spinner.removeAttribute('hidden');
+    //     app.container.setAttribute('hidden', true);
+    //     app.isLoading = true;
+    //     app.updateNews();
+    // });
 
     app.updateNews = function () {
         if (app.isLoading) {

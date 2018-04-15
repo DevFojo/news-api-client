@@ -2,8 +2,10 @@ var cacheName = 'news-api-client';
 var filesToCache = [
     //'./',
     './index.html',
-    './scripts/app.js',
-    './css/style.css'
+    './js/app.js',
+    './css/style.css',
+    './js/material.min.js',
+    './css/material.min.css'
 ];
 
 self.addEventListener('install', function (e) {
