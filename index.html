@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="News API Client by Femi Ojo">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#607d8b" />
     <title>News API Client</title>
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -26,7 +27,7 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" type="text/css" href="css/material.min.css">
+    <link rel="stylesheet" type="text/css" href="css/material.blue_grey-indigo.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
@@ -48,26 +49,27 @@
         </header>
         <main class="mdl-layout__content">
             <div class="loader">
-                <div class="mdl-spinner mdl-js-spinner is-active"></div>
+                <div class="mdl-spinner mdl-color-text--grey-700 mdl-js-spinner is-active"></div>
             </div>
             <div class="mdl-layout__panel article_list" id="overview" hidden>
                 <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp article_template" hidden>
-                    <div class="mdl-card mdl-cell mdl-cell--12-col">
-                        <div class="mdl-card__supporting-text">
-                            <strong class="article_title"></strong>
-                            <p class="article_description"></p>
-                        </div>
+                    <a class="mdl-js-ripple-effect mdl-color-text--grey-700 article_link" target="_blank">
+                        <span class="mdl-card mdl-cell mdl-cell--12-col article_div">
+                            <div class="mdl-card__supporting-text">
+                                <strong class="article_title"></strong>
+                                <p class="article_description"></p>
+                            </div>
 
-                        <div class="mdl-card__actions mdl-card--border">
-                            <button class="mdl-button mdl-js-button mdl-color-text--grey-600 article_source">
-                                <i class="material-icons">library_books</i>
-                            </button>
-                            <button class="mdl-button mdl-js-button mdl-color-text--grey-600 article_time">
-                                <i class="material-icons">access_time</i>
-                            </button>
-                            <a href="#" class="mdl-button mdl-color-text--blue-600 mdl-js-button mdl-js-ripple-effect article_link" target="_blank">Read More</a>
-                        </div>
-                    </div>
+                            <div class="mdl-card__actions mdl-card--border">
+                                <button class="mdl-button mdl-js-button mdl-color-text--grey-700 article_source">
+                                    <i class="material-icons">library_books</i>
+                                </button>
+                                <button class="mdl-button mdl-js-button mdl-color-text--grey-700 article_time">
+                                    <i class="material-icons">access_time</i>
+                                </button>
+                            </div>
+                        </span>
+                    </a>
                 </section>
             </div>
         </main>

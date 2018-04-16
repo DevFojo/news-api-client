@@ -1,12 +1,10 @@
 var cacheName = 'news-api-client';
 var filesToCache = [
-    //'./',
-    './img/icon.png',
     './index.html',
     './js/app.js',
     './css/style.css',
     './js/material.min.js',
-    './css/material.min.css'
+    './css/material.blue_grey-indigo.min.css'
 ];
 
 self.addEventListener('install', function (e) {
@@ -37,21 +35,15 @@ self.addEventListener('activate', function (e) {
 
 self.addEventListener('fetch', function (e) {
     console.log('[ServiceWorker] Fetch', e.request.url);
-    var newsApiUrl = 'https://newsapi.org/v2';
-    if (e.request.url.indexOf(newsApiUrl) > -1) {
-        e.respondWith(
-            caches.open(dataCacheName).then(function (cache) {
-                return fetch(e.request).then(function (response) {
-                    cache.put(e.request.url, response.clone());
+    //var newsApiUrl = 'https://newsapi.org/v2';
+    e.respondWith(
+        caches.open(cacheName).then(function (cache) {
+            return cache.match(e.request).then(function (response) {
+                return response || fetch(e.request).then(function (response) {
+                    cache.put(e.request, response.clone());
                     return response;
                 });
-            })
-        );
-    } else {
-        e.respondWith(
-            caches.match(e.request).then(function (response) {
-                return response || fetch(e.request);
-            })
-        );
-    }
+            });
+        })
+    );
 });

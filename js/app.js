@@ -10,6 +10,12 @@
         articleList: document.querySelector('.article_list'),
         //addDialog: document.querySelector('.dialog-container'),
     };
+    window.onload = function () {
+        app.spinner.removeAttribute('hidden');
+        app.articleList.setAttribute('hidden', true);
+        app.isLoading = true;
+        app.updateNews();
+    };
 
     document.getElementById('btnRefresh').addEventListener('click', function () {
         app.spinner.removeAttribute('hidden');
@@ -19,14 +25,13 @@
     });
 
     app.updateNews = function () {
-        if (app.isLoading) {
-            app.getNews().then(function () {
-                console.log("got news");
-                app.spinner.setAttribute('hidden', true);
-                app.articleList.removeAttribute('hidden');
-                app.isLoading = false;
-            });
-        }
+        app.getNews().then(function () {
+            console.log("got news");
+            app.spinner.setAttribute('hidden', true);
+            app.articleList.removeAttribute('hidden');
+            app.isLoading = false;
+        });
+
     };
     app.getNews = function () {
         return new Promise(function (resolve, reject) {
@@ -78,7 +83,7 @@
                 }
                 articleCard.querySelector('.article_link').href = c.url;
                 articleCard.querySelector('.article_source').appendChild(document.createTextNode(' ' + c.source.name));
-                articleCard.querySelector('.article_time').appendChild(document.createTextNode(' ' + new Date(c.publishedAt)));
+                articleCard.querySelector('.article_time').appendChild(document.createTextNode(' ' + dateToString(new Date(c.publishedAt))));
                 articleCard.removeAttribute('hidden');
                 app.articleList.appendChild(articleCard);
             }
@@ -95,10 +100,25 @@
             });
     }
 
-    if (!('indexedDB' in window)) {
-        console.log('[IndexedDB] This browser doesn\'t support IndexedDB');
+    if ((!window.indexedDB)) {
+        console.log('[IndexedDB] This browser doesn\'t supports IndexedDB');
         return;
     }
+
+    // var dbOpenPromise = window.indexedDB.open('news-api-client-db');
+    // dbOpenPromise.onsuccess = function (event) {
+    //     db = event.target.result;
+    // };
+
+    // dbOpenPromise.onerror = function (event) {
+    //     console.log('[IndexedDB] error occured', event.target.error);
+    // };
+
+    // dbOpenPromise.onupgradeneeded = function (event) {
+    //     var db = event.target.result;
+    // }
+
+
 
 
     var initialNews = [{
@@ -126,5 +146,23 @@
         "publishedAt": "2018-04-14T22:19:50Z"
     }
     ];
-    app.updateNews();
 })();
+
+function dateToString(date) {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+
+    today = dd + '/' + mm + '/' + ('' + yyyy).substring(2, 4) + ' ' + date.getHours() + ':' + date.getMinutes();
+    return today;
+
+}
