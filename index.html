@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="News Client by Femi Ojo">
+    <meta name="description" content="News by Femi Ojo">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#607d8b" />
@@ -25,97 +25,73 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" type="text/css" href="css/material.blue_grey-indigo.min.css">
-    <link rel="stylesheet" type="text/css" href="css/getmdl-select.min.css">
-    <!-- <link rel="stylesheet" type="text/css" href="css/mdl-selectfield.min.css"> -->
+    <link rel="stylesheet" type="text/css" href="css/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="js/jquery.min.js" async></script>
     <script src="js/idb.js" async></script>
-    <script src="js/material.min.js" defer></script>
-    <!-- <script src="js/mdl-selectfield.min.js" defer></script> -->
-    <script src="js/getmdl-select.min.js" defer></script>
+    <script src="js/semantic.min.js" defer></script>
     <script src="js/data.js" async></script>
     <script src="js/app.js" async></script>
 </head>
 
-<body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
-    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <header class="mdl-layout__header">
-            <div class="mdl-layout__header-row">
-                <span class="mdl-layout-title">News Client</span>
-                <div class="mdl-layout-spacer"></div>
-                <nav class="mdl-navigation">
-                    <button class="mdl-button mdl-js-button mdl-button--icon" id="btnRefresh" href="">
-                        <i class="material-icons">refresh</i>
-                    </button>
-                    <button class="mdl-button mdl-js-button mdl-button--icon" id="btnFilter" href="">
-                        <i class="material-icons">filter_list</i>
-                    </button>
-                </nav>
-            </div>
-        </header>
-        <main class="mdl-layout__content">
-            <div class="mdl-progress mdl-js-progress mdl-progress__indeterminate loader"></div>
-            <div class="mdl-layout__panel article_list" id="overview" hidden>
-                <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp article_template" hidden>
-                    <a class="mdl-js-ripple-effect mdl-color-text--grey-700 article_link" target="_blank">
-                        <span class="mdl-card mdl-cell mdl-cell--12-col article_div">
-                            <div class="mdl-card__supporting-text">
-                                <strong class="article_title"></strong>
-                                <p class="article_description"></p>
-                            </div>
+<body>
+    <div class="ui fixed menu">
+        <div class="ui container">
+            <a class="item">
+                <i class="newspaper icon"></i>
+            </a>
+            <div class="right menu">
+                <button class="ui item button" id="btnRefresh">
+                    <i class="sync alternate icon" id="loader"></i>
+                    Sync</button>
 
-                            <div class="mdl-card__actions mdl-card--border">
-                                <button class="mdl-button mdl-js-button mdl-color-text--grey-700 article_source article_tag_text">
-                                    <i class="material-icons article_tag_icon">library_books</i>
-                                </button>
-                                <button class="mdl-button mdl-js-button mdl-color-text--grey-700 article_time article_tag_text">
-                                    <i class="material-icons article_tag_icon">access_time</i>
-                                </button>
-                            </div>
-                        </span>
-                    </a>
-                </section>
+                <button class="ui item button" id="btnFilter">
+                    <i class="filter icon"></i>
+                    Filter
+                </button>
             </div>
+        </div>
+    </div>
 
-        </main>
-        <dialog class="mdl-dialog filter_dialog">
-            <div class="md l-dialog__content">
-                <h5>Filter Artiles</h5>
-                <div>
-                    <div class="mdl-cell mdl-cell--12-col">
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fix-height country_filter_select">
-                            <input type="text" value="" class="mdl-textfield__input" id="country_filter" readonly>
-                            <input type="hidden" value="" class="country_filter" name="country_filter">
-                            <label for="country_filter" class="mdl-textfield__label">Country</label>
-                            <ul for="country_filter" class="mdl-menu mdl-menu--bottom-left mdl-js-menu country_filter_list">
-                            </ul>
-                        </div>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fix-height source_filter_select">
-                            <input type="text" value="" class="mdl-textfield__input" id="source_filter" readonly>
-                            <input type="hidden" value="" class="source_filter" name="source_filter">
-                            <label for="source_filter" class="mdl-textfield__label">Source</label>
-                            <ul for="source_filter" class="mdl-menu mdl-menu--bottom-left mdl-js-menu source_filter_list">
-                            </ul>
-                        </div>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fix-height category_filter_select">
-                            <input type="text" value="" class="mdl-textfield__input" id="category_filter" readonly>
-                            <input type="hidden" value="" class="category_filter" name="category_filter">
-                            <label for="category_filter" class="mdl-textfield__label">Category</label>
-                            <ul for="category_filter" class="mdl-menu mdl-menu--bottom-left mdl-js-menu category_filter_list">
-                            </ul>
-                        </div>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input query_filter" name="query_filter" type="text">
-                            <label class="mdl-textfield__label" for="query_filter">Search Terms</label>
-                        </div>
+    </main>
+    <dialog class="mdl-dialog filter_dialog">
+        <div class="md l-dialog__content">
+            <h5>Filter Artiles</h5>
+            <div>
+                <div class="mdl-cell mdl-cell--12-col">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fix-height country_filter_select">
+                        <input type="text" value="" class="mdl-textfield__input" id="country_filter" readonly>
+                        <input type="hidden" value="" class="country_filter" name="country_filter">
+                        <label for="country_filter" class="mdl-textfield__label">Country</label>
+                        <ul for="country_filter" class="mdl-menu mdl-menu--bottom-left mdl-js-menu country_filter_list">
+                        </ul>
                     </div>
-
-                    <div class="mdl-dialog__actions">
-                        <button type="button" class="mdl-button btnFilterArticles">Filter</button>
-                        <button type="button" class="mdl-button btnCloseFilterDialog">Close</button>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fix-height source_filter_select">
+                        <input type="text" value="" class="mdl-textfield__input" id="source_filter" readonly>
+                        <input type="hidden" value="" class="source_filter" name="source_filter">
+                        <label for="source_filter" class="mdl-textfield__label">Source</label>
+                        <ul for="source_filter" class="mdl-menu mdl-menu--bottom-left mdl-js-menu source_filter_list">
+                        </ul>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fix-height category_filter_select">
+                        <input type="text" value="" class="mdl-textfield__input" id="category_filter" readonly>
+                        <input type="hidden" value="" class="category_filter" name="category_filter">
+                        <label for="category_filter" class="mdl-textfield__label">Category</label>
+                        <ul for="category_filter" class="mdl-menu mdl-menu--bottom-left mdl-js-menu category_filter_list">
+                        </ul>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input query_filter" name="query_filter" type="text">
+                        <label class="mdl-textfield__label" for="query_filter">Search Terms</label>
                     </div>
                 </div>
-        </dialog>
+
+                <div class="mdl-dialog__actions">
+                    <button type="button" class="mdl-button btnFilterArticles">Filter</button>
+                    <button type="button" class="mdl-button btnCloseFilterDialog">Close</button>
+                </div>
+            </div>
+    </dialog>
 </body>
 
 </html>

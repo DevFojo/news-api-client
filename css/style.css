@@ -97,6 +97,13 @@ html, body {
   z-index: 999;
 }
 
+.mdl-demo #btnRefresh {
+  position: absolute;
+  right: 40px;
+  top: 36px;
+  z-index: 999;
+}
+
 .mdl-demo .mdl-layout__content section:not(:last-of-type) {
   position: relative;
   margin-bottom: 25px;

@@ -1,13 +1,13 @@
 var cacheName = 'news-api-client';
 var filesToCache = [
     './index.html',
-    './js/app.js',
-    './css/style.css',
-    './js/material.min.js',
-    './css/material.blue_grey-indigo.min.css',
-    './js/getmdl-select.min.js',
-    './css/getmdl-select.min.css',
-    './js/data.js'
+    // './js/app.js',
+    // './css/style.css',
+    // './js/material.min.js',
+    // './css/material.blue_grey-indigo.min.css',
+    // './js/getmdl-select.min.js',
+    // './css/getmdl-select.min.css',
+    // './js/data.js'
 ];
 
 self.addEventListener('install', function (e) {

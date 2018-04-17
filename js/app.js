@@ -5,19 +5,13 @@
         _isLoading: false,
         filter: {},
         displayedArticles: {},
-        loader: document.querySelector('.loader'),
+        loader: document.getElementById('loader'),
+        refreshButton: document.getElementById('btnRefresh'),
         articleItemTemplate: document.querySelector('.article_template'),
         articleList: document.querySelector('.article_list'),
         filterDialog: document.querySelector('.filter_dialog'),
         sources: []
     };
-
-    Object.defineProperty(app, 'isLoading', {
-        set: function (x) {
-            app.loader.setAttribute('hidden', !x);
-            this._isLoading = x;
-        }
-    });
 
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker
@@ -28,6 +22,22 @@
                 console.error('[ServiceWorker] Registration failed');
             });
     }
+
+    Object.defineProperty(app, 'isLoading', {
+        set: function (x) {
+            if (x) {
+                app.loader.classList.add("loading");
+                app.refreshButton.setAttribute('disabled', true);
+            } else {
+                app.loader.classList.remove("loading");
+                app.refreshButton.setAttribute('disabled', false);
+
+            }
+            this._isLoading = x;
+        }
+    });
+
+
 
     if ((!window.indexedDB)) {
         console.error('[IndexedDb] This browser doesn\'t supports IndexedDB');
@@ -50,21 +60,21 @@
     });
 
     window.onload = function () {
-        app.isLoading = true;
-        app.updateNews();
-        app.populateCountries().then(function () {
-            console.debug('populated countries');
-        }).catch(function (err) {
-            console.error('cant populate countries',err);
-        });
-        app.populateCategories().then(function () {
-            console.debug('populated Category');
-        }).catch(function (err) {
-            console.error('cant populate Category', err);
-        });
+        //app.isLoading = true;
+        // app.updateNews();
+        // app.populateCountries().then(function () {
+        //     console.debug('populated countries');
+        // }).catch(function (err) {
+        //     console.error('cant populate countries', err);
+        // });
+        // app.populateCategories().then(function () {
+        //     console.debug('populated Category');
+        // }).catch(function (err) {
+        //     console.error('cant populate Category', err);
+        // });
     };
 
-    document.getElementById('btnRefresh').addEventListener('click', function () {
+    app.refreshButton.addEventListener('click', function () {
         app.isLoading = true;
         app.updateNews();
     });
@@ -92,7 +102,6 @@
                 query: app.filterDialog.querySelector('.query_filter').value,
             };
             app.filterDialog.close();
-            debugger;
             console.debug('filter', app.filter);
             app.isLoading = true;
         });
