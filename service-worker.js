@@ -5,8 +5,8 @@ var filesToCache = [
     './css/style.css',
     './js/material.min.js',
     './css/material.blue_grey-indigo.min.css',
-    './js/mdl-selectfield.min.js',
-    './css/mdl-selectfield.min.css',
+    './js/getmdl-select.min.js',
+    './css/getmdl-select.min.css',
     './js/data.js'
 ];
 
@@ -38,7 +38,6 @@ self.addEventListener('activate', function (e) {
 
 self.addEventListener('fetch', function (e) {
     console.log('[ServiceWorker] Fetch', e.request.url);
-    //var newsApiUrl = 'https://newsapi.org/v2';
     e.respondWith(
         caches.open(cacheName).then(function (cache) {
             return cache.match(e.request).then(function (response) {

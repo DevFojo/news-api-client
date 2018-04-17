@@ -1,15 +1,23 @@
 (function () {
     'use strict';
-    const apiKey = '7a8dfe28afa24555aa4dbff00d1dfe3d';
+    var apiKey = '7a8dfe28afa24555aa4dbff00d1dfe3d';
     var app = {
-        isLoading: true,
+        _isLoading: false,
         filter: {},
         displayedArticles: {},
-        spinner: document.querySelector('.loader'),
+        loader: document.querySelector('.loader'),
         articleItemTemplate: document.querySelector('.article_template'),
         articleList: document.querySelector('.article_list'),
-        filterDialog: document.querySelector('.filter_dialog')
+        filterDialog: document.querySelector('.filter_dialog'),
+        sources: []
     };
+
+    Object.defineProperty(app, 'isLoading', {
+        set: function (x) {
+            app.loader.setAttribute('hidden', !x);
+            this._isLoading = x;
+        }
+    });
 
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker
@@ -25,7 +33,7 @@
         console.error('[IndexedDb] This browser doesn\'t supports IndexedDB');
         return;
     }
-    const dbPromise = idb.open('news-api-client-db', 3, function (upgradeDb) {
+    var dbPromise = idb.open('news-api-client-db', 3, function (upgradeDb) {
         switch (upgradeDb.oldVersion) {
             case 0:
             case 1:
@@ -33,41 +41,37 @@
                 upgradeDb.createObjectStore('articles', {
                     keyPath: 'url'
                 });
+                break;
             case 2:
                 console.debug('Creating a articles source index');
                 var store = upgradeDb.transaction.objectStore('articles');
                 store.createIndex('source', 'source', {});
         }
     });
+
     window.onload = function () {
-        app.spinner.removeAttribute('hidden');
-        app.articleList.setAttribute('hidden', true);
         app.isLoading = true;
         app.updateNews();
         app.populateCountries().then(function () {
-            console.log('populated countries');
-        }).catch(function () {
-            console.error('cant populate countries');
+            console.debug('populated countries');
+        }).catch(function (err) {
+            console.error('cant populate countries',err);
         });
         app.populateCategories().then(function () {
-            console.log('populated Category');
-        }).catch(function () {
-            console.error('cant populate Category');
+            console.debug('populated Category');
+        }).catch(function (err) {
+            console.error('cant populate Category', err);
         });
-
-
     };
 
     document.getElementById('btnRefresh').addEventListener('click', function () {
-        app.displayedArticles = {};
-        app.spinner.removeAttribute('hidden');
-        app.articleList.setAttribute('hidden', true);
         app.isLoading = true;
         app.updateNews();
     });
 
     document.getElementById('btnFilter').addEventListener('click', function () {
         app.filterDialog.showModal();
+
     });
 
     if (!app.filterDialog.showModal) {
@@ -79,12 +83,29 @@
             app.filterDialog.close();
         });
 
+    app.filterDialog.querySelector('.btnFilterArticles')
+        .addEventListener('click', function () {
+            app.filter = {
+                country: app.filterDialog.querySelector('.country_filter').value,
+                source: app.filterDialog.querySelector('.source_filter').value,
+                category: app.filterDialog.querySelector('.category_filter').value,
+                query: app.filterDialog.querySelector('.query_filter').value,
+            };
+            app.filterDialog.close();
+            debugger;
+            console.debug('filter', app.filter);
+            app.isLoading = true;
+        });
+
+
     app.updateNews = function () {
         app.getArticles()
             .then(function (articles) {
                 app.saveArticles(articles).then(function (o) {
                     app.updateCards(articles);
-                    app.spinner.setAttribute('hidden', true);
+                    app.populateSources().then(function () {
+                        console.debug('populated sources');
+                    });
                     app.articleList.removeAttribute('hidden');
                     app.isLoading = false;
                 }).catch(function (err) {
@@ -153,6 +174,9 @@
                             console.debug('saved new', url);
                         });
                     }
+                    if ((app.sources.indexOf(article.source.name) < 0)) {
+                        app.sources.push(article.source.name);
+                    }
                     return article;
                 });
             }));
@@ -187,7 +211,7 @@
     app.populateCountries = function () {
         return new Promise(function (resolve, reject) {
             if (countries) {
-                var countrySelect = app.filterDialog.querySelector('.country_filter_list');
+                var select = app.filterDialog.querySelector('.country_filter_list');
                 countries.forEach(function (country) {
                     var option = document.createElement('li');
                     option.textContent = country.name;
@@ -195,9 +219,12 @@
                     option.setAttribute('data-val', country.code);
                     if (country.code == 'ng') {
                         option.setAttribute('data-selected', true);
+                        select.insertBefore(option, select.children[0]);
+                    } else {
+                        select.appendChild(option);
                     }
-                    countrySelect.appendChild(option);
                 });
+                getmdlSelect.init('.country_filter_select');
                 resolve();
             } else {
                 reject();
@@ -208,17 +235,18 @@
     app.populateCategories = function () {
         return new Promise(function (resolve, reject) {
             if (categories) {
-                var select = app.filterDialog.querySelector('.category_filter');
-                var emptyOption = document.createElement('option');
-                emptyOption.selected = true;
-                debugger;
+                var select = app.filterDialog.querySelector('.category_filter_list');
+                var emptyOption = document.createElement('li');
+                emptyOption.setAttribute('data-selected', true);
                 select.appendChild(emptyOption);
                 categories.forEach(function (category) {
-                    var option = document.createElement('option');
+                    var option = document.createElement('li');
                     option.textContent = toTitleCase(category);
-                    option.value = category;
+                    option.className = "mdl-menu__item";
+                    option.setAttribute('data-val', category);
                     select.appendChild(option);
                 });
+                getmdlSelect.init('.category_filter_select');
                 resolve();
             } else {
                 reject();
@@ -227,8 +255,28 @@
     };
 
     app.populateSources = function () {
-
-    }
+        return new Promise(function (resolve, reject) {
+            if (app.sources) {
+                if (app.sources.length > 0) {
+                    var select = app.filterDialog.querySelector('.source_filter_list');
+                    var emptyOption = document.createElement('li');
+                    emptyOption.setAttribute('data-selected', true);
+                    select.appendChild(emptyOption);
+                    app.sources.forEach(function (source) {
+                        var option = document.createElement('li');
+                        option.textContent = toTitleCase(source);
+                        option.className = "mdl-menu__item";
+                        option.setAttribute('data-val', source);
+                        select.appendChild(option);
+                    });
+                }
+                getmdlSelect.init('.source_filter_select');
+                resolve();
+            } else {
+                reject();
+            }
+        });
+    };
 })();
 
 function toTitleCase(str) {
@@ -253,9 +301,11 @@ function buildFilter(filter) {
     var country = '';
     var source = '';
     var query = '';
+    var category = '';
     if (filter) {
         country = filter.country ? filter.country : country;
         source = filter.source ? filter.source : source;
+        category = filter.category ? filter.category : category;
         query = filter.query ? filter.query : query;
         if (!country && !source && !query) {
             country = 'ng';
@@ -263,5 +313,5 @@ function buildFilter(filter) {
     } else {
         country = 'ng';
     }
-    return (country ? 'country=' + country : '') + (query ? '&q=' + query : '') + (source ? '&sources=' + source : '');
+    return (country ? 'country=' + country : '') + (query ? '&q=' + query : '') + (source ? '&sources=' + source : '') + (category ? '&category=' + category : '');
 }

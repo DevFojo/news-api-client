@@ -1,7 +1,7 @@
 {
-  "short_name": "News API Client",
-  "name": "News API Client",
-  "theme_color": "#607d8b",
+  "short_name": "News Client",
+  "name": "News Client",
+  "theme_color": "#3f51b5",
   "icons": [
     {
       "src": "img/icon.png",
@@ -26,5 +26,5 @@
   ],
   "start_url": "index.html",
   "display": "fullscreen",
-  "background_color": "#607d8b"
+  "background_color": "#3f51b5"
 }
