@@ -4,7 +4,10 @@ var filesToCache = [
     './js/app.js',
     './css/style.css',
     './js/material.min.js',
-    './css/material.blue_grey-indigo.min.css'
+    './css/material.blue_grey-indigo.min.css',
+    './js/mdl-selectfield.min.js',
+    './css/mdl-selectfield.min.css',
+    './js/data.js'
 ];
 
 self.addEventListener('install', function (e) {

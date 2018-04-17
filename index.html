@@ -24,11 +24,18 @@
     <meta name="msapplication-TileColor" content="#3372DF">
 
     <link rel="shortcut icon" href="img/icon.png">
-
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" type="text/css" href="css/material.blue_grey-indigo.min.css">
+    <link rel="stylesheet" type="text/css" href="css/getmdl-select.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="css/mdl-selectfield.min.css"> -->
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="js/idb.js" async></script>
+    <script src="js/material.min.js" defer></script>
+    <!-- <script src="js/mdl-selectfield.min.js" defer></script> -->
+    <script src="js/getmdl-select.min.js" defer></script>
+    <script src="js/data.js" async></script>
+    <script src="js/app.js" async></script>
 </head>
 
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
@@ -41,7 +48,7 @@
                     <button class="mdl-button mdl-js-button mdl-button--icon" id="btnRefresh" href="">
                         <i class="material-icons">refresh</i>
                     </button>
-                    <button class="mdl-button mdl-js-button mdl-button--icon" href="">
+                    <button class="mdl-button mdl-js-button mdl-button--icon" id="btnFilter" href="">
                         <i class="material-icons">filter_list</i>
                     </button>
                 </nav>
@@ -72,9 +79,52 @@
                     </a>
                 </section>
             </div>
+            <dialog class="mdl-dialog filter_dialog">
+                <div class="mdl-dialog__content">
+                    <h5>Filter Artiles</h5>
+                    <div class="mdl-cell mdl-cell--12-col">
+                        <div class="mdl-selectfield mdl-js-selectfield mdl-selectfield--floating-label">
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fix-height">
+                                <input type="text" value="" class="mdl-textfield__input" id="country_filter" readonly>
+                                <input type="hidden" value="" name="country_filter">
+                                <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                                <label for="country_filter" class="mdl-textfield__label">Country</label>
+                                <ul for="country_filter" class="mdl-menu mdl-menu--bottom-left mdl-js-menu country_filter_list">
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- </div>
+                    <div class="mdl-cell mdl-cell12-col"> -->
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fix-height">
+                            <input type="text" value="" class="mdl-textfield__input" id="source_filter" readonly>
+                            <input type="hidden" value="" name="source_filter">
+                            <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                            <label for="source_filter" class="mdl-textfield__label">Source</label>
+                            <ul for="source_filter" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                            </ul>
+                        </div>
+                        <!-- </div>
+                    <div class="mdl-cell mdl-cell12-col"> -->
+                        <div class="mdl-selectfield mdl-js-selectfield mdl-selectfield--floating-label">
+                            <select name="category_filter" class="mdl-selectfield__select category_filter">
+                            </select>
+                            <label for="category_filter" class="mdl-selectfield__label">Category</label>
+                        </div>
+                        <!-- </div>
+                    <div class="mdl-cell mdl-cell12-col"> -->
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-labe" data-upgraded=",MaterialTextfield">
+                            <input class="mdl-textfield__input" name="sample4" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sample4" required="">
+                            <label class="mdl-textfield__label" for="sample4">Search Terms</label>
+                        </div>
+                    </div>
+
+                    <div class="mdl-dialog__actions">
+                        <button type="button" class="mdl-button btnFilterArticles">Filter</button>
+                        <button type="button" class="mdl-button btnCloseFilterDialog">Close</button>
+                    </div>
+            </dialog>
         </main>
-        <script src="js/app.js" async></script>
-        <script src="js/material.min.js" async></script>
+
 </body>
 
 </html>
